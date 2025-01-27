@@ -37,8 +37,10 @@
     function Snake() {
       this.snakeArray = [{ x: 10, y: 10 }];
       this.direction = 'RIGHT';
+      this.nextDirection = 'RIGHT'; // To store the next direction after the current movement
 
       this.update = function() {
+        this.direction = this.nextDirection; // Apply next direction
         const head = { ...this.snakeArray[0] };
 
         if (this.direction === 'RIGHT') head.x += 1;
@@ -46,19 +48,23 @@
         if (this.direction === 'UP') head.y -= 1;
         if (this.direction === 'DOWN') head.y += 1;
 
-        this.snakeArray.unshift(head);
+        this.snakeArray.unshift(head); // Add new head to the snake
+
+        // Remove the tail to simulate movement
         this.snakeArray.pop();
       };
 
       this.changeDirection = function(event) {
-        if (event.key === 'ArrowUp' && this.direction !== 'DOWN') this.direction = 'UP';
-        if (event.key === 'ArrowDown' && this.direction !== 'UP') this.direction = 'DOWN';
-        if (event.key === 'ArrowLeft' && this.direction !== 'RIGHT') this.direction = 'LEFT';
-        if (event.key === 'ArrowRight' && this.direction !== 'LEFT') this.direction = 'RIGHT';
+        // Prevent the snake from reversing
+        if (event.key === 'ArrowUp' && this.direction !== 'DOWN') this.nextDirection = 'UP';
+        if (event.key === 'ArrowDown' && this.direction !== 'UP') this.nextDirection = 'DOWN';
+        if (event.key === 'ArrowLeft' && this.direction !== 'RIGHT') this.nextDirection = 'LEFT';
+        if (event.key === 'ArrowRight' && this.direction !== 'LEFT') this.nextDirection = 'RIGHT';
       };
 
       this.grow = function() {
-        this.snakeArray.push({ ...this.snakeArray[this.snakeArray.length - 1] });
+        const tail = { ...this.snakeArray[this.snakeArray.length - 1] };
+        this.snakeArray.push(tail); // Add another segment to the snake at the tail
       };
 
       this.checkCollision = function() {
@@ -141,7 +147,7 @@
       }, 100);
     }
 
-    // Start the gam
+    // Start the game
     init();
   </script>
 </body>
